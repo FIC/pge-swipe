@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Smooth Scroll</title>
+<link type="text/css" rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans+Condensed:300|Oswald:300,regular&amp;subset=latin" media="all" />
+
+  <style type="text/css">
+
+   body {
+    font-family: "Helvetica Neue", Helvetica, sans-serif;
+    /*font-family: 'Open Sans Condensed', Arial, Helvetica, san-serif;*/
+    background: -moz-radial-gradient(center, ellipse cover,  #6e767d 0%, #464d51 63%); /* FF3.6+ */
+    background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%,#6e767d), color-stop(63%,#464d51)); /* Chrome,Safari4+ */
+    background: -webkit-radial-gradient(center, ellipse cover,  #6e767d 0%,#464d51 63%); /* Chrome10+,Safari5.1+ */
+    background: -o-radial-gradient(center, ellipse cover,  #6e767d 0%,#464d51 63%); /* Opera 12+ */
+    background: -ms-radial-gradient(center, ellipse cover,  #6e767d 0%,#464d51 63%); /* IE10+ */
+    background: radial-gradient(ellipse at center,  #6e767d 0%,#464d51 63%); /* W3C */
+    color:white;
+    cursor: none;
+    cursor: pointer;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+
+   }
+   .container {
+     margin: 40px auto;
+     width: 300px;
+   }
+   .content-holder{
+    height: 515px;
+    overflow: hidden;
+    border-bottom: 1px gray solid;
+   }
+   .content-holder > div{
+    margin-bottom: 10px;
+    background: rgba(50,50,50,.25);
+    padding: 5px;
+    font-size: .9em;
+
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+   }
+   .alpha-nav {
+     position: fixed;
+     margin-left: -80px;
+     width: 50px;
+     list-style: none;
+     margin-top: -3px;
+   }
+   .alpha-nav li{
+     padding: 2px;
+     font-size: .9em;
+   }
+   .alpha-nav li a:link,
+   .alpha-nav li a:visited{
+     color:white;
+     text-decoration: none;
+   }
+   .alpha-nav-horz {
+     position: fixed;
+     display: inline-block;
+     margin-left: -35px;
+     width: 450px;
+     list-style: none;
+     margin-top: 540px;
+   }
+   .alpha-nav-horz li a:link,
+   .alpha-nav-horz li a:visited{
+     color:white;
+     text-decoration: none;
+   }
+
+    .alpha-nav-horz li {
+ display: inline;
+    }
+
+   .node-faculty, .node-staff-member {
+    margin:10px 0;
+    position:relative;
+  }
+  .node-faculty .links a, .node-staff-member .links a {
+    position: absolute;
+    right: 0;
+    top: 0;
+    content: none;
+  }
+  .view-faculty-members .views-row:not(:last-of-type), .view-staff-members .views-row:not(:last-of-type) {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  }
+  .view-faculty-members .views-row:not(:first-of-type), .view-staff-members .views-row:not(:first-of-type) {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  .view-faculty-members .views-row, .view-staff-members .views-row {
+    padding:5px;
+  }
+  /*.view-faculty-members .views-row, .view-staff-members .views-row {
+    padding-left:20px;
+  }*/
+  .field-name-field-photo-crop {
+    float:left;
+    margin-right:30px;
+  }
+  .group_office .field {
+    display:inline-block;
+  }
+  .field-name-field-room:before {
+    content:'.';
+    display:inline-block;
+  }
+  .field-name-field-room .field-items {
+    display:inline-block;
+  }
+  .field-name-field-building {
+    margin-right:3px;
+  }
+  .field-type-name, .field-name-field-building {
+    text-transform:uppercase;
+  }
+  .view-faculty-members .field-type-imagefield-crop img, .view-staff-members .field-type-imagefield-crop img {
+    border: 1px solid #ccc;
+    /*-webkit-box-shadow:  1px 1px 5px 1px rgba(0, 0, 0, .65);
+      box-shadow:  1px 1px 5px 1px rgba(0, 0, 0, .65);*/
+  }
+
+  .debug{
+    color:white;
+    position: absolute;
+    top: 40px; 
+    right: 100px;
+    width:100;
+    height: 100px;
+  }
+
+  </style>
+
+</head>
+<body>
+
+  <div class="container">
+   
+    <ul class="alpha-nav">
+      <li><a href="#A">A</a></li>
+      <li><a href="#B">B</a></li>
+      <li><a href="#C">C</a></li>
+      <li><a href="#D">D</a></li>
+      <li><a href="#E">E</a></li>
+      <li><a href="#F">F</a></li>
+      <li><a href="#G">G</a></li>
+      <li><a href="#H">H</a></li>
+      <li><a href="#I">I</a></li>
+      <li><a href="#J">J</a></li>
+      <li><a href="#K">K</a></li>
+      <li><a href="#L">L</a></li>
+      <li><a href="#M">M</a></li>
+      <li><a href="#N">N</a></li>
+      <li><a href="#O">O</a></li>
+      <li><a href="#P">P</a></li>
+      <li><a href="#Q">Q</a></li>
+      <li><a href="#R">R</a></li>
+      <li><a href="#S">S</a></li>
+      <li><a href="#T">T</a></li>
+      <li><a href="#U">U</a></li>
+      <li><a href="#V">V</a></li>
+      <li><a href="#W">W</a></li>
+      <li><a href="#X">X</a></li>
+      <li><a href="#Y">Y</a></li>
+      <li><a href="#Z">Z</a></li>
+    </ul>
+
+
+    <div class="content-holder">
+
+        <div id="A">A</div>
+        <div>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
+        <div>sunt in culpa qui officia deserunt mollit anim id est laborum. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
+        <div id="B">B</div>
+        <div>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
+        <div>sunt in culpa qui officia deserunt mollit anim id est laborum. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
+        <div id="C">C</div>
+        <div>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
+        <div>sunt in culpa qui officia deserunt mollit anim id est laborum. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
+        <div id="D">D</div>
+         <div>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
+        <div>sunt in culpa qui officia deserunt mollit anim id est laborum. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
+        <div id="E">E</div>
+         <div>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
+        <div>sunt in culpa qui officia deserunt mollit anim id est laborum. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
+        <div id="F">F</div>
+         <div>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
+        <div>sunt in culpa qui officia deserunt mollit anim id est laborum. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
+        <div id="G">G</div>
+        <div>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
+        <div>sunt in culpa qui officia deserunt mollit anim id est laborum. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
+        <div id="H">H</div>
+        <div>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
+        <div>sunt in culpa qui officia deserunt mollit anim id est laborum. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
+        <div id="I">I</div>
+         <div>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
+        <div>sunt in culpa qui officia deserunt mollit anim id est laborum. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
+        <div id="J">J</div>
+         <div>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
+        <div>sunt in culpa qui officia deserunt mollit anim id est laborum. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
+        <div id="K">K</div>
+         <div>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
+        <div>sunt in culpa qui officia deserunt mollit anim id est laborum. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
+        <div id="L">L</div>
+         <div>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
+        <div>sunt in culpa qui officia deserunt mollit anim id est laborum. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
+        <div id="M">M</div>
+        <div>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
+        <div>sunt in culpa qui officia deserunt mollit anim id est laborum. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
+        <div id="N">N</div>
+         <div>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
+        <div>sunt in culpa qui officia deserunt mollit anim id est laborum. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
+        <div id="O">O</div>
+         <div>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
+        <div>sunt in culpa qui officia deserunt mollit anim id est laborum. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
+        <div id="P">P</div>
+         <div>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
+        <div>sunt in culpa qui officia deserunt mollit anim id est laborum. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
+        <div id="Q">Q</div>
+         <div>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
+        <div>sunt in culpa qui officia deserunt mollit anim id est laborum. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
+        <div id="R">R</div>
+         <div>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
+        <div>sunt in culpa qui officia deserunt mollit anim id est laborum. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
+        <div id="S">S</div>
+         <div>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
+        <div>sunt in culpa qui officia deserunt mollit anim id est laborum. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
+        <div id="T">T</div>
+         <div>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
+        <div>sunt in culpa qui officia deserunt mollit anim id est laborum. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
+        <div id="U">U</div>
+         <div>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
+        <div>sunt in culpa qui officia deserunt mollit anim id est laborum. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
+        <div id="V">V</div>
+         <div>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
+        <div>sunt in culpa qui officia deserunt mollit anim id est laborum. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
+        <div id="W">W</div>
+         <div>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
+        <div>sunt in culpa qui officia deserunt mollit anim id est laborum. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
+        <div id="X">X</div>
+         <div>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
+        <div>sunt in culpa qui officia deserunt mollit anim id est laborum. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
+        <div id="Y">Y</div>
+         <div>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
+        <div>sunt in culpa qui officia deserunt mollit anim id est laborum. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
+        <div id="Z">Z</div>
+         <div>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
+        <div>sunt in culpa qui officia deserunt mollit anim id est laborum. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
+
+    </div>
+
+  </div>
+
+  <div class="debug">
+    <div class="first"> </div>
+    <div class="second"> </div>
+  </div>
+
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+  <script src="http:////cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
+  <script src="js/jquery.touchSwipe.min.js"></script>
+
+  <script>
+    $(document).ready(function() {
+
+      var scrollSpeed = 1000,
+          ease = 'easeOutCubic',
+          yPos = $('.content-holder > div').position().top,
+          containerHeight = $('.content-holder')[0].scrollHeight,
+          yOffset = 0, 
+          topDistance = 0;
+
+      $(".content-holder").swipe( {
+        triggerOnTouchEnd : true,
+        swipeStatus : swipeStatus,
+        allowPageScroll:"vertical"
+      });
+
+    function swipeStatus(event, phase, direction, distance, fingers) {
+
+      if( phase=="move" && (direction=="up" || direction=="down") ){
+        var duration = 0;
+        topDistance = distance;
+
+        if (direction == "up"){       
+          scrollDiv(yOffset+distance, duration);
+        }
+
+        else if (direction == "down"){
+          scrollDiv(yOffset - distance, duration);
+        }
+      }
+
+      else if ( phase == "cancel") {
+          console.log('cancel');
+      }
+
+      else if ( phase =="end" ){
+        if (direction == "down"){         
+          yOffset -= topDistance; 
+
+          var t = $(".content-holder div").position().top - 40;
+
+          if(t > 0){ 
+            // fix
+             scrollDiv2(0, 250);
+          }
+        } else if (direction == "up"){
+          yOffset += topDistance; 
+          
+        }
+      }
+    }
+
+     function scrollDiv2(distance, duration){
+      $(".content-holder div").css("-webkit-transition-duration", (duration/1000).toFixed(1) + "s");
+
+      //inverse the number we set in the css
+      var value = (distance < 0 ? "" : "-") + Math.abs(distance).toString();
+
+      $(".content-holder div").css("-webkit-transform", "translate(0px,"+value+"px)");
+      yOffset = 0;
+    }
+
+    function scrollDiv(distance, duration){
+      $(".content-holder div").css("-webkit-transition-duration", (duration/1000).toFixed(1) + "s");
+
+      //inverse the number we set in the css
+      var value = (distance < 0 ? "" : "-") + Math.abs(distance).toString();
+
+      $(".content-holder div").css("-webkit-transform", "translate(0px,"+value+"px)");
+      //yOffset = 0;
+    }
+
+    $('ul.alpha-nav a').click(function() {
+        var id = $(this).attr('href');
+        $('.content-holder').css('overflow', 'visible'); 
+        var offset = $(id).offset().top - 40;
+        yPos = Math.abs(offset);
+        console.log('offset',offset,id);
+        $('.content-holder').css('overflow', 'hidden');  
+        $('.content-holder').stop().animate(
+                            { scrollTop: offset},
+                              scrollSpeed,ease, 
+                              function() {
+                            });      
+        return false;
+      });
+
+    });
+
+  </script>
+</body>
+</html>
