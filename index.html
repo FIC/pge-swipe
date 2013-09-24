@@ -36,6 +36,7 @@
     overflow: hidden;
     border-bottom: 1px gray solid;
    }
+
    .content-holder > div{
     margin-bottom: 10px;
     background: rgba(50,50,50,.25);
@@ -273,90 +274,105 @@
 
   <script>
     $(document).ready(function() {
+      var $cdiv = $('.content-holder');
+      var $cgroup = $('.content-holder div');
+
+
+      var lastContentDiv = $('.content-holder div:last-child');
+      var lastScrollPos = lastContentDiv.height() + lastContentDiv.offset().top - $cdiv.height() - $cdiv.offset().top + 20;
+      var lastTransPos = 0 - lastScrollPos;
+
+      console.log("last pos: "+lastScrollPos);
 
       var scrollSpeed = 1000,
-          ease = 'easeOutCubic',
-          yPos = $('.content-holder > div').position().top,
-          containerHeight = $('.content-holder')[0].scrollHeight,
-          yOffset = 0, 
-          topDistance = 0;
+          ease = 'easeOutCubic';
 
-      $(".content-holder").swipe( {
-        triggerOnTouchEnd : true,
-        swipeStatus : swipeStatus,
-        allowPageScroll:"vertical"
+
+      var scrollStart = false;
+      
+      var startTransPos = 0, endTransPos = 0;
+      var initY =  0, endY = 0;
+
+      $cdiv.mousedown(function(evt1) {
+        scrollStart = true;
+        initY = evt1.clientY;
+
+        // switch to translate
+        $cdiv.stop();
+        startTransPos = 0-$cdiv.scrollTop();
+        endTransPos = startTransPos;
+        $cdiv.scrollTop(0);
+        $cgroup.css("-webkit-transform", "translateY("+endTransPos+"px)");
+
+        console.log("Scroll Start: "+$($cdiv.children()[0]).attr("style"));
+
+        $cdiv.on("mousemove", function(evt2) {
+          if(scrollStart) {
+            endY = evt2.clientY;
+            endTransPos = startTransPos+(endY-initY);
+            //console.log(endTransPos);
+
+            $cgroup.css("-webkit-transform", "translateY("+endTransPos+"px)");
+
+          }
+        });
       });
 
-    function swipeStatus(event, phase, direction, distance, fingers) {
+      $(document).mouseup(function() {
 
-      if( phase=="move" && (direction=="up" || direction=="down") ){
-        var duration = 0;
-        topDistance = distance;
+        if(scrollStart) {
+          console.log("Scroll Stop: "+$($cdiv.children()[0]).attr("style"));
 
-        if (direction == "up"){       
-          scrollDiv(yOffset+distance, duration);
-        }
+          if(endTransPos > 0) { // top
+            // switch to scroll
+            $cdiv.scrollTop(0);
+            $cgroup.css("-webkit-transform", "translateY(0px)");
+            
+          } else if(endTransPos < lastTransPos) { // bottom
+            // switch to scroll
+            $cdiv.scrollTop(lastScrollPos);
+            $cgroup.css("-webkit-transform", "translateY(0px)");
 
-        else if (direction == "down"){
-          scrollDiv(yOffset - distance, duration);
-        }
-      }
-
-      else if ( phase == "cancel") {
-          console.log('cancel');
-      }
-
-      else if ( phase =="end" ){
-        if (direction == "down"){         
-          yOffset -= topDistance; 
-
-          var t = $(".content-holder div").position().top - 40;
-
-          if(t > 0){ 
-            // fix
-             scrollDiv2(0, 250);
-          }
-        } else if (direction == "up"){
-          yOffset += topDistance; 
+          } else {
+            // switch to scroll
+            $cdiv.scrollTop(0-endTransPos);
+            $cgroup.css("-webkit-transform", "translateY(0px)");
+            
+            if(endTransPos < startTransPos) { // scroll up
+              $cdiv.stop().animate({"scrollTop": "+=50"}, 500, function() {});
+            } else if(endTransPos > startTransPos) {  // scroll down
+              $cdiv.stop().animate({"scrollTop": "-=50"}, 500, function() {});
+            } else {
+              // do nothing
+            }
           
+          }
+
         }
-      }
-    }
 
-     function scrollDiv2(distance, duration){
-      $(".content-holder div").css("-webkit-transition-duration", (duration/1000).toFixed(1) + "s");
+        scrollStart = false;
+        $cdiv.off("mousemove","**");
 
-      //inverse the number we set in the css
-      var value = (distance < 0 ? "" : "-") + Math.abs(distance).toString();
+        // now at scroll what?
+        console.log("Now at scroll: "+$cdiv.scrollTop());
 
-      $(".content-holder div").css("-webkit-transform", "translate(0px,"+value+"px)");
-      yOffset = 0;
-    }
-
-    function scrollDiv(distance, duration){
-      $(".content-holder div").css("-webkit-transition-duration", (duration/1000).toFixed(1) + "s");
-
-      //inverse the number we set in the css
-      var value = (distance < 0 ? "" : "-") + Math.abs(distance).toString();
-
-      $(".content-holder div").css("-webkit-transform", "translate(0px,"+value+"px)");
-      //yOffset = 0;
-    }
-
+      });
+    
     $('ul.alpha-nav a').click(function() {
         var id = $(this).attr('href');
         $('.content-holder').css('overflow', 'visible'); 
-        var offset = $(id).offset().top - 40;
-        yPos = Math.abs(offset);
+        var offset = $(id).offset().top - $('.content-holder').offset().top;
+
         console.log('offset',offset,id);
+
         $('.content-holder').css('overflow', 'hidden');  
         $('.content-holder').stop().animate(
                             { scrollTop: offset},
                               scrollSpeed,ease, 
-                              function() {
-                            });      
+                              function() {});      
         return false;
       });
+
 
     });
 
